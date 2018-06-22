@@ -79,13 +79,13 @@ public class TransactionServiceImpl implements TransactionService {
             this.statistic = new Statistic(
                     statistic.getSum() + t.getAmount(),
                     (statistic.getSum() + t.getAmount()) / (statistic.getCount() + 1),
-                    Math.max(statistic.getMax(), t.getAmount()),
-                    Math.min(statistic.getMin(), t.getAmount()),
+                    statistic.getCount() == 0 ? t.getAmount() : Math.max(statistic.getMax(), t.getAmount()),
+                    statistic.getCount() == 0 ? t.getAmount() : Math.min(statistic.getMin(), t.getAmount()),
                     statistic.getCount() + 1
             );
         } else if (operation.equals(TransactionOperation.REMOVE)) {
             statistic = new Statistic(
-                    statistic.getSum() - t.getAmount(),
+                    statistic.getCount() == 1 ? 0 : statistic.getSum() - t.getAmount(),
                     statistic.getCount() == 1 ? 0 : (statistic.getSum() - t.getAmount()) / (statistic.getCount() - 1),
                     statistic.getCount() == 1 ? 0
                             : (statistic.getMax() > t.getAmount() ? statistic.getMax()
